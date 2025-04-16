@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inventario - Rasyre's Boutique</title>
+    <link rel="stylesheet" href="inventario.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="../ventas/ventas.html">
+        <img
+          src="../assets/logo RB.png"
+          alt="Logo"
+          width="auto"
+          height="80"
+          style="vertical-align: middle; margin-right: 10px"
+        />
+        Rasyre's Boutique
+      </a>
+      <div>
+        <a href="../ventas/ventas.html">Ventas</a>
+        <a href="inventario.html">Inventario</a>
+        <button id="logoutBtn">Cerrar Sesión</button>
+      </div>
+    </nav>
+
+    <h2>Registrar Producto</h2>
+    <form id="formularioInventario">
+      <label for="nombreProducto">Nombre del Producto:</label>
+      <input type="text" id="nombreProducto" required /><br />
+
+      <label for="descripcionProducto">Descripción:</label>
+      <input type="text" id="descripcionProducto" required /><br />
+
+      <label for="precioProducto">Precio:</label>
+      <input type="number" id="precioProducto" step="0.01" required /><br />
+
+      <label for="cantidadProducto">Cantidad:</label>
+      <input type="number" id="cantidadProducto" required /><br />
+
+      <label for="imagenProducto">Imagen:</label>
+      <input type="file" id="imagenProducto" accept="image/*" /><br /><br />
+
+      <button type="submit">Registrar Producto</button>
+    </form>
+
+    <h2>Productos Registrados</h2>
+    <table id="tablaInventario">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Imagen</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        onValue,
+        remove,
+        update,
+      } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+      import {
+        getAuth,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCTPQgbbIkBeFojLMDTHLy8KEFcnutdxE4",
+        authDomain: "rasyre-ventas.firebaseapp.com",
+        databaseURL: "https://rasyre-ventas-default-rtdb.firebaseio.com",
+        projectId: "rasyre-ventas",
+        storageBucket: "rasyre-ventas.appspot.com",
+        messagingSenderId: "198247943288",
+        appId: "1:198247943288:web:e1d39c69e7a522d0d9718d",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
+
+      // Verificar si el usuario está autenticado
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = "../index.html";
+        }
+      });
+
+      // Función para cerrar sesión
+      document.getElementById("logoutBtn").addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          alert("Sesión cerrada");
+          window.location.href = "../index.html";
+        } catch (error) {
+          console.error("Error al cerrar sesión:", error);
+        }
+      });
+
+      let productoIdEditar = null;
+      let imagenExistente = null;
+
+      document
+        .getElementById("formularioInventario")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const nombreProducto =
+            document.getElementById("nombreProducto").value;
+          const descripcionProducto = document.getElementById(
+            "descripcionProducto"
+          ).value;
+          const precioProducto = parseFloat(
+            document.getElementById("precioProducto").value
+          );
+          const cantidadProducto = parseInt(
+            document.getElementById("cantidadProducto").value
+          );
+          const imagenProducto =
+            document.getElementById("imagenProducto").files[0];
+
+          try {
+            let imagenURL = imagenExistente;
+
+            if (imagenProducto) {
+              const formData = new FormData();
+              formData.append("file", imagenProducto);
+              formData.append("upload_preset", "sin-autenticacion");
+
+              const cloudinaryRes = await fetch(
+                "https://api.cloudinary.com/v1_1/diwwdyxka/image/upload",
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+
+              const data = await cloudinaryRes.json();
+
+              if (!data.secure_url)
+                throw new Error("No se pudo subir la imagen");
+
+              imagenURL = data.secure_url;
+            }
+
+            if (productoIdEditar) {
+              await update(ref(db, "inventario/" + productoIdEditar), {
+                nombre: nombreProducto,
+                descripcion: descripcionProducto,
+                precio: precioProducto,
+                cantidad: cantidadProducto,
+                imagenURL: imagenURL,
+              });
+              alert("✅ Producto actualizado con éxito");
+              productoIdEditar = null;
+            } else {
+              const idProducto = Math.random().toString(36).substr(2, 9);
+              await set(ref(db, "inventario/" + idProducto), {
+                nombre: nombreProducto,
+                descripcion: descripcionProducto,
+                precio: precioProducto,
+                cantidad: cantidadProducto,
+                imagenURL: imagenURL,
+              });
+              alert("✅ Producto registrado con éxito");
+            }
+
+            document.getElementById("formularioInventario").reset();
+            imagenExistente = null;
+          } catch (error) {
+            console.error(
+              "❌ Error al registrar o actualizar el producto:",
+              error
+            );
+            alert("Ocurrió un error al registrar o actualizar el producto.");
+          }
+        });
+
+      const productosRef = ref(db, "inventario");
+      onValue(productosRef, (snapshot) => {
+        const data = snapshot.val();
+        const tbody = document
+          .getElementById("tablaInventario")
+          .getElementsByTagName("tbody")[0];
+        tbody.innerHTML = "";
+
+        for (const id in data) {
+          const producto = data[id];
+          const row = tbody.insertRow();
+
+          row.innerHTML = `
+            <td>${producto.nombre}</td>
+            <td>${producto.descripcion}</td>
+            <td>${producto.precio}</td>
+            <td>${producto.cantidad}</td>
+            <td><img src="${producto.imagenURL}" alt="${producto.nombre}" width="50"></td>
+            <td>
+              <button onclick="eliminarProducto('${id}')">Eliminar</button>
+              <button onclick="editarProducto('${id}')">Editar</button>
+            </td>
+          `;
+        }
+      });
+
+      window.eliminarProducto = async (id) => {
+        try {
+          await remove(ref(db, "inventario/" + id));
+          alert("✅ Producto eliminado");
+        } catch (error) {
+          console.error("❌ Error al eliminar el producto:", error);
+        }
+      };
+
+      window.editarProducto = (id) => {
+        const productoRef = ref(db, "inventario/" + id);
+        onValue(productoRef, (snapshot) => {
+          const producto = snapshot.val();
+          document.getElementById("nombreProducto").value = producto.nombre;
+          document.getElementById("descripcionProducto").value =
+            producto.descripcion;
+          document.getElementById("precioProducto").value = producto.precio;
+          document.getElementById("cantidadProducto").value = producto.cantidad;
+          imagenExistente = producto.imagenURL;
+          productoIdEditar = id;
+        });
+      };
+    </script>
+  </body>
+</html>

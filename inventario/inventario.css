@@ -1,0 +1,146 @@
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* Barra de navegación fija */
+nav {
+  background-color: #333;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  
+  top: 0;
+  z-index: 100;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px;
+}
+
+nav a:hover {
+  color: #f2a900;
+}
+
+nav img {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/* Estilo para el logo y nombre */
+nav > a {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Estilo para los enlaces del menú */
+nav div {
+  margin-top: 10px;
+}
+
+/* Estilo del formulario */
+form {
+  background-color: white;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+form label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"],
+form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+form button {
+  background-color: #f2a900;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #e89700;
+}
+
+/* Tabla de productos */
+#tablaInventario {
+  width: 80%;
+  margin: 30px auto;
+  border-collapse: collapse;
+}
+
+#tablaInventario th,
+#tablaInventario td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+#tablaInventario th {
+  background-color: #333;
+  color: white;
+}
+
+#tablaInventario td img {
+  border-radius: 5px;
+}
+
+#tablaInventario td button {
+  background-color: #f2a900;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#tablaInventario td button:hover {
+  background-color: #e89700;
+}
+
+/* Estilo de los botones de acción en la tabla */
+#tablaInventario td button:nth-child(1) {
+  background-color: #ff4d4d;
+}
+
+#tablaInventario td button:nth-child(2) {
+  background-color: #00aaff;
+}
+
+#tablaInventario td button:nth-child(1):hover {
+  background-color: #e63946;
+}
+
+#tablaInventario td button:nth-child(2):hover {
+  background-color: #0288d1;
+}

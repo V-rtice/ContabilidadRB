@@ -1,0 +1,174 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fuente y fondo general */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.6;
+}
+
+/* Barra de navegación */
+.navbar {
+  background-color: #000000;
+  color: white;
+  padding: 0px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #FFD700; /* Dorado */
+}
+
+.navbar .nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar .nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar .nav-links a:hover {
+  color: #FFD700;
+}
+
+/* Contenido principal */
+.contenido {
+  padding: 40px 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+h2.titulo-formulario, h2.titulo-ventas, h2.titulo-inventario {
+  margin-bottom: 20px;
+  color: #000;
+  border-bottom: 2px solid #FFD700;
+  padding-bottom: 5px;
+}
+
+/* Formulario */
+form.formulario {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+form.formulario label.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+form.formulario input[type="text"],
+form.formulario input[type="number"],
+form.formulario input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+form.formulario button.form-button {
+  background-color: #FFD700;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form.formulario button.form-button:hover {
+  background-color: #e6c200;
+}
+
+/* Tablas */
+table.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 50px;
+}
+
+table.tabla th, table.tabla td {
+  text-align: left;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+table.tabla th {
+  background-color: #000;
+  color: white;
+}
+
+table.tabla td img {
+  max-width: 80px;
+  border-radius: 6px;
+}
+
+/* Botones de acciones */
+
+button {
+  background-color: #FFD700;
+  color: #000;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #e6c200;
+}
+
+/* Modo edición activo */
+.edicion-activa {
+  background-color: #fff8dc;
+  border: 2px solid #FFD700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .contenido {
+    padding: 20px;
+  }
+
+  form.formulario {
+    padding: 20px;
+  }
+}
